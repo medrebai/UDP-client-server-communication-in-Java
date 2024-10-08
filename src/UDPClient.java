@@ -8,6 +8,14 @@ public class UDPClient {
         clientSocket.setSoTimeout(1000);
         Scanner input = new Scanner(System.in);
 
+        System.out.print("Donner moi ton pseudo: ");
+        String pseudo = input.nextLine();
+
+        // Inform the server about the new pseudo
+        byte[] pseudoData = ("PSEUDO:" + pseudo).getBytes();
+        DatagramPacket pseudoPacket = new DatagramPacket(pseudoData, pseudoData.length, InetAddress.getByName("127.0.0.1"), 5001);
+        clientSocket.send(pseudoPacket);
+
         Thread receiveThread = new Thread(() -> {
             byte[] receiveData = new byte[1024];
             while (true) {
@@ -15,7 +23,7 @@ public class UDPClient {
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     clientSocket.receive(receivePacket);
                     String serverMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                    System.out.println("Message from server: " + serverMessage);
+                    System.out.println(serverMessage);
                 } catch (IOException e) {
                     // Timeout exception is expected, continue listening
                 }
