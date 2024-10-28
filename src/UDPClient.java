@@ -37,10 +37,16 @@ public class UDPClient {
             if (cmd.equals("QUIT")) {
                 clientSocket.close();
                 System.exit(1);
+            } else if (cmd.equals("LIST")) {
+                // Send LIST command to the server
+                byte[] sendData = "LIST".getBytes();
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("127.0.0.1"), 5001);
+                clientSocket.send(sendPacket);
+            } else {
+                byte[] sendData = cmd.getBytes();
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("127.0.0.1"), 5001);
+                clientSocket.send(sendPacket);
             }
-            byte[] sendData = cmd.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("127.0.0.1"), 5001);
-            clientSocket.send(sendPacket);
         }
     }
 }
